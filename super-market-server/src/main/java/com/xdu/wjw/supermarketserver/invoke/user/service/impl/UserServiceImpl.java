@@ -4,17 +4,16 @@ import com.xdu.wjw.supermarketmodel.contants.PatternConstant;
 import com.xdu.wjw.supermarketmodel.model.entity.User;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertReq;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertResp;
-import com.xdu.wjw.supermarketserver.invoke.user.model.UserReq;
 import com.xdu.wjw.supermarketserver.invoke.user.service.UserService;
 import com.xdu.wjw.supermarketserver.model.dao.user.UserDao;
 import com.xdu.wjw.supermarketserver.model.dto.user.UserDto;
 import com.xdu.wjw.supermarketserver.util.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,7 +49,7 @@ public class UserServiceImpl implements UserService {
                 .password(password)
                 .build();
         userDao.insertUser(dto);
-        List<User> user = null;
+        List<User> user = new ArrayList<>();
         if (StringUtils.isNotEmpty(phoneNumber)) {
             user = userDao.getUserByPhone(userInsertReq.getPhoneNumber());
             if (user.size() == 0) {
@@ -62,10 +61,8 @@ public class UserServiceImpl implements UserService {
             if (user.size() == 0) {
                 throw new Exception("数据插入失败");
             }
-            autograph = EncryptUtil.Base64Encode(phoneNumber);
         }
         // 设置用户缓存
-        assert user != null;
         CacheUtil.getCacheUtil().setValue(autograph, JsonUtil.toJsonString(user.get(0)));
         String token = JwtTokenUtil.getToken(autograph);
         return UserInsertResp.builder()
