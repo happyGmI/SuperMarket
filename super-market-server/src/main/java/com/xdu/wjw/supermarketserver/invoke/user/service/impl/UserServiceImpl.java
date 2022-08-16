@@ -49,19 +49,8 @@ public class UserServiceImpl implements UserService {
                 .password(password)
                 .build();
         userDao.insertUser(dto);
-        List<User> user = new ArrayList<>();
-        if (StringUtils.isNotEmpty(phoneNumber)) {
-            user = userDao.getUserByPhone(userInsertReq.getPhoneNumber());
-            if (user.size() == 0) {
-                throw new Exception("数据插入失败");
-            }
-        }
-        if (StringUtils.isNotEmpty(email)) {
-            user = userDao.getUserByEmail(email);
-            if (user.size() == 0) {
-                throw new Exception("数据插入失败");
-            }
-        }
+        List<User> user;
+        user = getUserFromDB(phoneNumber, email);
         // 设置用户缓存
         CacheUtil.getCacheUtil().setValue(autograph, JsonUtil.toJsonString(user.get(0)));
         String token = JwtTokenUtil.getToken(autograph);
@@ -80,6 +69,26 @@ public class UserServiceImpl implements UserService {
             return EncryptUtil.Base64Encode(phoneOrEmail);
         }
         return "";
+    }
+
+    private List<User> getUserFromDB(String phoneNumber, String email) throws Exception {
+        List<User> user = new ArrayList<>();
+        if (StringUtils.isNotEmpty(phoneNumber)) {
+            user = userDao.getUserByPhone(Long.valueOf(phoneNumber));
+            if (user.size() == 0) {
+                throw new Exception("查询结果为空！");
+            }
+        }
+        if (StringUtils.isNotEmpty(email)) {
+            user = userDao.getUserByEmail(email);
+            if (user.size() == 0) {
+                throw new Exception("查询结果为空！");
+            }
+        }
+        user.get(0).setPassword(null);
+        user.get(0).setPhoneNumber(null);
+        user.get(0).setEmail(null);
+        return user;
     }
 
     private void valid(UserInsertReq userInsertReq) {
@@ -103,11 +112,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void getUserInfoFromCache(String autograph) {
+    private void getUserFromCache(String autograph) {
 
     }
 
-    private String genUserInfoCacheKey(String autograph) {
+    private String genUserCacheKey(String autograph) {
         return autograph;
     }
 }
