@@ -4,7 +4,19 @@ spring:
     url: jdbc:mysql://localhost:3306/super_market?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&&allowPublicKeyRetrieval=true&&useSSL=false
     username: root
     password: 020313wy...
-
+  redis:
+    #    database: 0
+    host: 175.24.201.104
+    port: 6379
+    timeout: 30000
+    password: ucpAXNge?)_4>PdF]_7i
+    #    client-type: lettuce
+    #    lettuce:
+    #      pool:
+    #        max-active: 10
+    #        min-idle: 0
+    #        max-idle: 1o
+    #        max-wait: -2
 # MyBatis mapper.xml路径配置
 mybatis:
   # 指定 mapper.xml 的其它module位置

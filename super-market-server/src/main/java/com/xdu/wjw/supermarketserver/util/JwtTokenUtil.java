@@ -3,6 +3,7 @@ package com.xdu.wjw.supermarketserver.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.xdu.wjw.supermarketmodel.model.entity.User;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserReq;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserResp;
 
@@ -22,7 +23,7 @@ public class JwtTokenUtil {
     // 私钥设置
     private static final String TOKEN_SECRET = "5xcJVrXNyQDIxK1l2RS9nw";
 
-    public static String getToken(UserReq userReq){
+    public static String getToken(String autograph){
         //过期时间和加密算法设置
         Date date=new Date(System.currentTimeMillis() + EXPIRE_TIME);
         Algorithm algorithm =Algorithm.HMAC256(TOKEN_SECRET);
@@ -34,7 +35,7 @@ public class JwtTokenUtil {
 
         return JWT.create()
                 .withHeader(header)
-                .withClaim("autograph" ,userReq.getAutograph())
+                .withClaim("autograph", autograph)
                 .withExpiresAt(date)
                 .sign(algorithm);
     }

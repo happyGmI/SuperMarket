@@ -5,8 +5,8 @@ import java.util.Map;
 
 public enum UserTypeEnum {
 
-    MERCHANT(1, "MERCHANT"),
-    CUSTOMER(2, "CUSTOMER");
+    MERCHANT(1, "regular_users"),
+    CUSTOMER(2, "member_users");
 
     private static final Map<Integer, UserTypeEnum> userTypeEnumMap;
 
@@ -26,5 +26,9 @@ public enum UserTypeEnum {
 
     public static String getUserTypeByCode(int code) {
         return userTypeEnumMap.get(code).type;
+    }
+
+    public byte getCode() {
+        return (byte) code;
     }
 }

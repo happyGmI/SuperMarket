@@ -13,11 +13,7 @@ import lombok.Data;
 @Builder
 public class UserInsertReq {
     /**
-     * 使用手机号
-     */
-    private String autograph;
-    /**
-     * 用户密码，加密过后
+     * 用户密码原始密码
      */
     private String password;
     /**
@@ -27,6 +23,10 @@ public class UserInsertReq {
     /**
      * 注册使用的手机号码
      */
-    private Integer phoneNumber;
+    private Long phoneNumber;
+    /**
+     * 验证码
+     */
+    private String verificationCode;
 
 }

@@ -14,7 +14,7 @@ import lombok.Data;
 public class UserReq {
 
     /**
-     * 使用手机号/邮箱生成的用户签名
+     * 使用手机号/邮箱用户签名
      */
     private String autograph;
 }

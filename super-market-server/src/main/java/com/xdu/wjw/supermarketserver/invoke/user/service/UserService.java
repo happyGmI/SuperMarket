@@ -15,6 +15,6 @@ public interface UserService {
      * 用户注册
      * @param userInsertReq 用户注册请求表单
      */
-    UserInsertResp register(UserInsertReq userInsertReq);
+    UserInsertResp register(UserInsertReq userInsertReq) throws Exception;
 
 }

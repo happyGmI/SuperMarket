@@ -21,7 +21,7 @@ public class User {
 
     private String email;
 
-    private Integer phoneNumber;
+    private Long phoneNumber;
 
     private Date addTime;
 
@@ -99,11 +99,11 @@ public class User {
         this.email = email == null ? null : email.trim();
     }
 
-    public Integer getPhoneNumber() {
+    public Long getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(Integer phoneNumber) {
+    public void setPhoneNumber(Long phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

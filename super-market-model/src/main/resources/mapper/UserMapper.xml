@@ -11,7 +11,7 @@
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="birthday" jdbcType="DATE" property="birthday" />
     <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="phone_number" jdbcType="INTEGER" property="phoneNumber" />
+    <result column="phone_number" jdbcType="BIGINT" property="phoneNumber" />
     <result column="add_time" jdbcType="TIMESTAMP" property="addTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -117,7 +117,7 @@
     values (#{id,jdbcType=BIGINT}, #{autograph,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, 
       #{password,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{portrait,jdbcType=VARCHAR}, 
       #{status,jdbcType=TINYINT}, #{birthday,jdbcType=DATE}, #{email,jdbcType=VARCHAR}, 
-      #{phoneNumber,jdbcType=INTEGER}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{phoneNumber,jdbcType=BIGINT}, #{addTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.xdu.wjw.supermarketmodel.model.entity.User">
@@ -189,7 +189,7 @@
         #{email,jdbcType=VARCHAR},
       </if>
       <if test="phoneNumber != null">
-        #{phoneNumber,jdbcType=INTEGER},
+        #{phoneNumber,jdbcType=BIGINT},
       </if>
       <if test="addTime != null">
         #{addTime,jdbcType=TIMESTAMP},
@@ -236,7 +236,7 @@
         email = #{record.email,jdbcType=VARCHAR},
       </if>
       <if test="record.phoneNumber != null">
-        phone_number = #{record.phoneNumber,jdbcType=INTEGER},
+        phone_number = #{record.phoneNumber,jdbcType=BIGINT},
       </if>
       <if test="record.addTime != null">
         add_time = #{record.addTime,jdbcType=TIMESTAMP},
@@ -260,7 +260,7 @@
       status = #{record.status,jdbcType=TINYINT},
       birthday = #{record.birthday,jdbcType=DATE},
       email = #{record.email,jdbcType=VARCHAR},
-      phone_number = #{record.phoneNumber,jdbcType=INTEGER},
+      phone_number = #{record.phoneNumber,jdbcType=BIGINT},
       add_time = #{record.addTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -295,7 +295,7 @@
         email = #{email,jdbcType=VARCHAR},
       </if>
       <if test="phoneNumber != null">
-        phone_number = #{phoneNumber,jdbcType=INTEGER},
+        phone_number = #{phoneNumber,jdbcType=BIGINT},
       </if>
       <if test="addTime != null">
         add_time = #{addTime,jdbcType=TIMESTAMP},
@@ -316,7 +316,7 @@
       status = #{status,jdbcType=TINYINT},
       birthday = #{birthday,jdbcType=DATE},
       email = #{email,jdbcType=VARCHAR},
-      phone_number = #{phoneNumber,jdbcType=INTEGER},
+      phone_number = #{phoneNumber,jdbcType=BIGINT},
       add_time = #{addTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
