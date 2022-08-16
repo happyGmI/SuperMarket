@@ -1,4 +1,4 @@
-package com.xdu.wjw.supermarketserver.model.user.dao.user;
+package com.xdu.wjw.supermarketserver.model.dao.user;
 
 import com.xdu.wjw.supermarketmodel.model.mapper.UserMapper;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertReq;

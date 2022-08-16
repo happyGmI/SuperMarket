@@ -1,4 +1,4 @@
-package com.xdu.wjw.supermarketserver.model.user.dto.user;
+package com.xdu.wjw.supermarketserver.model.dto.user;
 
 /**
  * @Class: UserDto

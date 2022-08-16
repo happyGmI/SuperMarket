@@ -2,6 +2,7 @@ package com.xdu.wjw.supermarketserver.api;
 
 import com.xdu.wjw.supermarketmodel.enums.api.ApiResponseEnum;
 import lombok.Builder;
+import lombok.Data;
 
 /**
  * @Class: ApiResponse
@@ -10,6 +11,7 @@ import lombok.Builder;
  * @Description:
  */
 @Builder
+@Data
 public class ApiResponse<T> {
 
     private Integer status;
@@ -20,22 +22,14 @@ public class ApiResponse<T> {
 
     private T data;
 
-    public static ApiResponse buildSuccessEmptyResponse() {
+    public static ApiResponse<Object> buildSuccessEmptyResponse() {
         return ApiResponse.builder()
                 .status(ApiResponseEnum.getStatusByCode(0))
                 .errorCode(ApiResponseEnum.getErrorCodeByCode(0))
                 .errorMessage(ApiResponseEnum.getErrorMessageByCode(0))
                 .build();
     }
-    public static <T> ApiResponse buildSuccessResponse(T data) {
-        return ApiResponse.builder()
-                .status(ApiResponseEnum.getStatusByCode(0))
-                .errorCode(ApiResponseEnum.getErrorCodeByCode(0))
-                .errorMessage(ApiResponseEnum.getErrorMessageByCode(0))
-                .data(data)
-                .build();
-    }
-    public static <T> ApiResponse buildSuccessPageResponse(T data) {
+    public static <T> ApiResponse<Object> buildSuccessResponse(T data) {
         return ApiResponse.builder()
                 .status(ApiResponseEnum.getStatusByCode(0))
                 .errorCode(ApiResponseEnum.getErrorCodeByCode(0))
@@ -43,7 +37,15 @@ public class ApiResponse<T> {
                 .data(data)
                 .build();
     }
-    public static ApiResponse buildFailResponse(ApiErrorShowResponse response) {
+    public static ApiResponse<Object> buildSuccessPageResponse(ApiPageResponse data) {
+        return ApiResponse.builder()
+                .status(ApiResponseEnum.getStatusByCode(0))
+                .errorCode(ApiResponseEnum.getErrorCodeByCode(0))
+                .errorMessage(ApiResponseEnum.getErrorMessageByCode(0))
+                .data(data)
+                .build();
+    }
+    public static ApiResponse<Object> buildFailResponse(ApiErrorShowResponse response) {
         return ApiResponse.builder()
                 .status(ApiResponseEnum.getStatusByCode(response.getCode()))
                 .errorCode(ApiResponseEnum.getErrorCodeByCode(response.getCode()))

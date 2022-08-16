@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Description:
  */
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/customers")
 public class GoodsCustomerController {
 
 }
