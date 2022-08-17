@@ -14,7 +14,6 @@ import java.util.Date;
 @Data
 @Builder
 public class UserQueryResp {
-
     /**
      * 用户类型
      */
@@ -39,5 +38,8 @@ public class UserQueryResp {
      * 脱敏处理后的电话号码
      */
     private Long phoneNumber;
-
+    /**
+     * token
+     */
+    private String token;
 }

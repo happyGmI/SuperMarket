@@ -1,6 +1,7 @@
 package com.xdu.wjw.supermarketserver.invoke.user.model;
 
 import com.xdu.wjw.supermarketmodel.enums.user.UserLoginTypeEnum;
+import com.xdu.wjw.supermarketmodel.enums.user.UserVerificationTypeEnum;
 import lombok.Builder;
 import lombok.Data;
 
@@ -32,5 +33,9 @@ public class UserQueryReq {
     /**
      * LoginType
      */
-    private UserLoginTypeEnum userLoginType;
+    private Integer userLoginType;
+    /**
+     * UserVerificationType
+     */
+    private Integer userVerificationType;
 }

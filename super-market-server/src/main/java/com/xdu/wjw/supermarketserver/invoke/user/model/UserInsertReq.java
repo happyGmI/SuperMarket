@@ -28,5 +28,4 @@ public class UserInsertReq {
      * 验证码
      */
     private String verificationCode;
-
 }

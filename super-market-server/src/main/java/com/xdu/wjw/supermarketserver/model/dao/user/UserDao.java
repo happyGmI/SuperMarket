@@ -27,15 +27,14 @@ public class UserDao {
         User user = new User();
         userMapper.insert(user);
     }
-    public List<User> getUserByPhone(Long phone) {
+    public List<User> getUserByPhone(UserDto userDto) {
         UserExample example = new UserExample();
-        example.createCriteria().andPhoneNumberEqualTo(phone).andStatusEqualTo(UserStatusEnum.ONLINE.getCode());
+        example.createCriteria().andPhoneNumberEqualTo(userDto.getPhoneNumber()).andStatusEqualTo(UserStatusEnum.ONLINE.getCode());
         return userMapper.selectByExample(example);
     }
-    public List<User> getUserByEmail(String email) {
+    public List<User> getUserByEmail(UserDto userDto) {
         UserExample example = new UserExample();
-        example.createCriteria().andEmailEqualTo(email).andStatusEqualTo(UserStatusEnum.ONLINE.getCode());
+        example.createCriteria().andEmailEqualTo(userDto.getEmail()).andStatusEqualTo(UserStatusEnum.ONLINE.getCode());
         return userMapper.selectByExample(example);
     }
-
 }

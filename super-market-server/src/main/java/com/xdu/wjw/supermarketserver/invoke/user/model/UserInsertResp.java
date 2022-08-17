@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 @Builder
 public class UserInsertResp {
-
+    /**
+     * 用户token
+     */
     private String token;
 }
