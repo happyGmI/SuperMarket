@@ -164,7 +164,7 @@ public class UserServiceImpl implements UserService {
         if (!(StringUtils.isNotEmpty(email) && PatternUtil.match(PatternConstant.EMAIL_CHECK_PATTERN, email))) {
             throw new IllegalArgumentException();
         }
-        if (!(StringUtils.isNotEmpty(phone) && PatternUtil.match(PatternConstant.EMAIL_CHECK_PATTERN, phone))) {
+        if (!(StringUtils.isNotEmpty(phone) && PatternUtil.match(PatternConstant.PHONE_CHECK_PATTERN, phone))) {
             throw new IllegalArgumentException();
         }
         if (StringUtils.isEmpty(userInsertReq.getVerificationCode())) {
@@ -178,6 +178,12 @@ public class UserServiceImpl implements UserService {
         String code = userQueryReq.getVerificationCode();
         Integer loginType = userQueryReq.getUserLoginType();
         Integer verificationType = userQueryReq.getUserVerificationType();
+        if (!(StringUtils.isNotEmpty(email) && PatternUtil.match(PatternConstant.EMAIL_CHECK_PATTERN, email))) {
+            throw new IllegalArgumentException();
+        }
+        if (!(StringUtils.isNotEmpty(phone) && PatternUtil.match(PatternConstant.PHONE_CHECK_PATTERN, phone))) {
+            throw new IllegalArgumentException();
+        }
         if (StringUtils.isEmpty(password) && verificationType.equals(UserVerificationTypeEnum.PASSWORD.getCode())) {
             throw new IllegalArgumentException();
         }
@@ -231,8 +237,6 @@ public class UserServiceImpl implements UserService {
     }
     private void setUserCache(String key, User user) {
         user.setPassword(null);
-        user.setPhoneNumber(null);
-        user.setEmail(null);
         cacheUtilService.setValue(key, JsonUtil.toJsonString(user));
     }
 }
