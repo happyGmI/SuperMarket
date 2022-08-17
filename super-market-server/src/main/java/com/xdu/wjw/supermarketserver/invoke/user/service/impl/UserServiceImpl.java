@@ -4,6 +4,8 @@ import com.xdu.wjw.supermarketmodel.contants.PatternConstant;
 import com.xdu.wjw.supermarketmodel.model.entity.User;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertReq;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertResp;
+import com.xdu.wjw.supermarketserver.invoke.user.model.UserQueryReq;
+import com.xdu.wjw.supermarketserver.invoke.user.model.UserQueryResp;
 import com.xdu.wjw.supermarketserver.invoke.user.service.UserService;
 import com.xdu.wjw.supermarketserver.model.dao.user.UserDao;
 import com.xdu.wjw.supermarketserver.model.dto.user.UserDto;
@@ -59,16 +61,34 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    public UserQueryResp login(UserQueryReq userQueryReq) {
+
+        return UserQueryResp.builder().build();
+    }
+
+    /**
+     * 校验验证码
+     * @param userInsertReq 用户注册信息
+     * @param phoneOrEmail 邮箱/手机
+     * @return
+     * @throws Exception
+     */
     private String verificationCodeAndEncode(UserInsertReq userInsertReq, String phoneOrEmail) throws Exception {
         if (StringUtils.isNotEmpty(phoneOrEmail)) {
-            Object verificationCode = CacheUtil.getCacheUtil().getValue(phoneOrEmail);
-            if (!userInsertReq.getVerificationCode().equals(verificationCode)) {
-                throw new Exception("验证码校验失败！");
-            }
-            CacheUtil.getCacheUtil().deleteKey(phoneOrEmail);
-            return EncryptUtil.Base64Encode(phoneOrEmail);
+            verificationCode(userInsertReq, phoneOrEmail);
+            return encodePhoneOrEmail(phoneOrEmail);
         }
         return "";
+    }
+    private void verificationCode(UserInsertReq userInsertReq, String phoneOrEmail) throws Exception {
+        Object verificationCode = CacheUtil.getCacheUtil().getValue(phoneOrEmail);
+        if (!userInsertReq.getVerificationCode().equals(verificationCode)) {
+            throw new Exception("验证码校验失败！");
+        }
+        CacheUtil.getCacheUtil().deleteKey(phoneOrEmail);
+    }
+    private String encodePhoneOrEmail(String phoneOrEmail) {
+        return EncryptUtil.Base64Encode(phoneOrEmail);
     }
 
     private List<User> getUserFromDB(String phoneNumber, String email) throws Exception {
