@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
                 .token(token)
                 .build();
     }
+
     @Transactional(rollbackFor = {Exception.class})
     public UserQueryResp login(UserQueryReq userQueryReq) throws Exception {
         validLoginReq(userQueryReq);
@@ -91,7 +92,14 @@ public class UserServiceImpl implements UserService {
         // 生成token
         String token = JwtTokenUtil.getToken(user.getAutograph());
         // 返回结果
+        // TODO: 邮箱和电话号码脱敏处理
         return UserQueryResp.builder()
+                .birthday(user.getBirthday())
+                .type(user.getType())
+                .nickname(user.getNickname())
+                .email(user.getEmail())
+                .phoneNumber(user.getPhoneNumber())
+                .portrait(user.getPortrait())
                 .token(token)
                 .build();
     }
