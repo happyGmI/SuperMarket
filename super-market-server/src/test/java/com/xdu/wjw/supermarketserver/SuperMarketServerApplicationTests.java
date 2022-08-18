@@ -1,10 +1,13 @@
 package com.xdu.wjw.supermarketserver;
 
+import com.xdu.wjw.supermarketmodel.enums.user.UserLoginTypeEnum;
+import com.xdu.wjw.supermarketmodel.enums.user.UserVerificationTypeEnum;
 import com.xdu.wjw.supermarketmodel.model.entity.User;
 import com.xdu.wjw.supermarketmodel.model.mapper.UserMapper;
 import com.xdu.wjw.supermarketserver.factory.MetaObjectFactory;
 import com.xdu.wjw.supermarketserver.invoke.lock.DistributeLockService;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertReq;
+import com.xdu.wjw.supermarketserver.invoke.user.model.UserQueryReq;
 import com.xdu.wjw.supermarketserver.invoke.user.service.UserService;
 import com.xdu.wjw.supermarketserver.model.dao.user.UserDao;
 import com.xdu.wjw.supermarketserver.model.dto.user.UserDto;
@@ -47,11 +50,25 @@ class SuperMarketServerApplicationTests {
 //                        .build()
 //        );
 //        System.out.println(JsonUtil.toJsonString(userMapper.selectByPrimaryKey(1L)));
-        cacheUtilService.setValue(String.valueOf(19829701506L), String.valueOf(123456));
-        System.out.println(cacheUtilService.getValue(String.valueOf(19829701506L)));
-        System.out.println(userService.register(
-                UserInsertReq.builder().phoneNumber(19829701506L).password("123456a").verificationCode("123456").build()
-        ));
+//        cacheUtilService.setValue(String.valueOf(19829701506L), String.valueOf(123456));
+//        System.out.println(cacheUtilService.getValue(String.valueOf(19829701506L)));
+//        System.out.println(userService.register(
+//                UserInsertReq.builder().phoneNumber(19829701506L).password("123456a").verificationCode("123456").build()
+//        ));
+//        System.out.println(userService.login(UserQueryReq
+//                .builder()
+//                .phoneNumber(19829701506L)
+//                .password("123456a")
+//                .userLoginType(UserLoginTypeEnum.PHONE.getCode())
+//                .userVerificationType(UserVerificationTypeEnum.PASSWORD.getCode())
+//                .build()));
+        long startTime = System.currentTimeMillis();
+        System.out.println(JsonUtil.toJsonString(userService.queryUserInfo(UserQueryReq.builder().autograph("MTk4Mjk3MDE1MDY=").build())));
+//        System.out.println(JsonUtil.toJsonString(userDao.getUserByAutograph(UserDto.builder().autograph("MTk4Mjk3MDE1MDY=").build())));
+        long next = System.currentTimeMillis();
+        System.out.println(next - startTime);
+        System.out.println(JsonUtil.toJsonString(userService.queryUserInfo(UserQueryReq.builder().autograph("MTk4Mjk3MDE1MDY=").build())));
+        System.out.println(System.currentTimeMillis() - next);
     }
     @Test
     public void testCache() {

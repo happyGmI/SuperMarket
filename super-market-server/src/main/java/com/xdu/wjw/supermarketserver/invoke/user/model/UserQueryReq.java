@@ -13,6 +13,10 @@ import lombok.Data;
 @Builder
 public class UserQueryReq {
     /**
+     * 使用手机号/邮箱用户签名
+     */
+    private String autograph;
+    /**
      * 用户密码原始密码
      */
     private String password;

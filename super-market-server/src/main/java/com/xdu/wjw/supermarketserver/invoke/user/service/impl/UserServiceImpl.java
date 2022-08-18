@@ -64,6 +64,11 @@ public class UserServiceImpl implements UserService {
         String autograph = "";
         String phoneNumber = userInsertReq.getPhoneNumber() != null ? String.valueOf(userInsertReq.getPhoneNumber()) : "";
         String email = userInsertReq.getEmail();
+        List<User> user;
+        user = getUserFromDBByPhoneOrEmail(phoneNumber, email);
+        if (!CollectionUtils.isEmpty(user)) {
+            throw new Exception("当前用户已经注册，请不要重复注册！");
+        }
         if (StringUtils.isNotEmpty(verificationCodeAndEncode(userInsertReq, phoneNumber))) {
             autograph = verificationCodeAndEncode(userInsertReq, phoneNumber);
         }
@@ -78,8 +83,7 @@ public class UserServiceImpl implements UserService {
                 .password(password)
                 .build();
         userDao.insertUser(dto);
-        List<User> user;
-        user = getUserFromDB(phoneNumber, email);
+        user = getUserFromDBByPhoneOrEmail(phoneNumber, email);
         // 设置用户缓存
         cacheUtilService.setValue(autograph, JsonUtil.toJsonString(user.get(0)));
         String token = JwtTokenUtil.getToken(autograph);
@@ -88,6 +92,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Override
     @Transactional(rollbackFor = {Exception.class})
     public UserQueryResp login(UserQueryReq userQueryReq) throws Exception {
         validLoginReq(userQueryReq);
@@ -95,17 +100,17 @@ public class UserServiceImpl implements UserService {
         String verKey = verKeyAndValue[0];
         String verValue = verKeyAndValue[1];
         // 扫db判断当前用户是否已经注册了
-        List<User> users = getUserFromDB(verKey, verKey);
-        User user = users.get(0);
+        List<User> users = getUserFromDBByPhoneOrEmail(verKey, verKey);
         if (CollectionUtils.isEmpty(users)) {
             throw new Exception("未注册/已注销的用户请先注册");
         }
+        User user = users.get(0);
         // 验证码验证
         if (userQueryReq.getUserVerificationType().equals(UserVerificationTypeEnum.VERIFICATION_CODE.getCode())) {
             verificationCode(verKey, verValue);
         } else if (userQueryReq.getUserVerificationType().equals(UserVerificationTypeEnum.PASSWORD.getCode())) {
             // 加密后比对数据库
-            String encodePassword = encodePhoneOrEmail(verKey);
+            String encodePassword = encodePhoneOrEmail(verValue);
             if (!user.getPassword().equals(encodePassword)) {
                 throw new Exception("用户密码不正确");
             }
@@ -116,13 +121,25 @@ public class UserServiceImpl implements UserService {
         String token = JwtTokenUtil.getToken(user.getAutograph());
         // 返回结果
         return UserQueryResp.builder()
+                .type(user.getType())
+                .nickname(user.getNickname())
+                .portrait(user.getPortrait())
+                .autograph(user.getAutograph())
+                .token(token)
+                .build();
+    }
+
+    @Override
+    public UserQueryResp queryUserInfo(UserQueryReq userQueryReq) {
+        User user = getUserFromCache(userQueryReq.getAutograph());
+        return UserQueryResp.builder()
                 .birthday(user.getBirthday())
                 .type(user.getType())
                 .nickname(user.getNickname())
-                .email(SensitiveFieldUtil.email(user.getEmail()))
-                .phoneNumber(SensitiveFieldUtil.telephone(String.valueOf(user.getPhoneNumber())))
                 .portrait(user.getPortrait())
-                .token(token)
+                .autograph(user.getAutograph())
+                .email(user.getEmail())
+                .phoneNumber(String.valueOf(user.getPhoneNumber()))
                 .build();
     }
     /**
@@ -149,7 +166,7 @@ public class UserServiceImpl implements UserService {
     private String encodePhoneOrEmail(String phoneOrEmail) {
         return EncryptUtil.Base64Encode(phoneOrEmail);
     }
-    private List<User> getUserFromDB(String phoneNumber, String email) throws Exception {
+    private List<User> getUserFromDBByPhoneOrEmail(String phoneNumber, String email) throws Exception {
         List<User> user = new ArrayList<>();
         if (StringUtils.isNotEmpty(phoneNumber) && NumberUtils.isDigits(phoneNumber)) {
             user = userDao.getUserByPhone(
@@ -160,6 +177,7 @@ public class UserServiceImpl implements UserService {
             if (user.size() == 0) {
                 throw new Exception("查询结果为空！");
             }
+            return user;
         }
         if (StringUtils.isNotEmpty(email)) {
             user = userDao.getUserByEmail(
@@ -169,8 +187,9 @@ public class UserServiceImpl implements UserService {
             if (user.size() == 0) {
                 throw new Exception("查询结果为空！");
             }
+            return user;
         }
-        return user;
+        return new ArrayList<>();
     }
     private void validRegisterReq(UserInsertReq userInsertReq) {
         String password = userInsertReq.getPassword();
@@ -233,27 +252,36 @@ public class UserServiceImpl implements UserService {
             // 使用手机号进行验证
             verificationKey = email;
         }
-        if (!StringUtils.isEmpty(phone) && verificationType.equals(UserLoginTypeEnum.PHONE.getCode())) {
+        if (!StringUtils.isEmpty(phone) && loginType.equals(UserLoginTypeEnum.PHONE.getCode())) {
             // 使用手机号进行验证
             verificationKey = phone;
         }
         String verificationFormat = "%s:%s";
         return String.format(verificationFormat, verificationKey, verificationValue);
     }
-
+    private List<User> geUserFromDBByAutograph(UserDto userDto) {
+        return userDao.getUserByAutograph(userDto);
+    }
     private User getUserFromCache(String autograph) {
-        return JsonUtil.jsonStringToObject(
+        User user = JsonUtil.jsonStringToObject(
                 String.valueOf(cacheUtilService.getValue(genUserCacheKey(autograph))),
                 User.class);
+        if (user == null) {
+            // 补偿一次读db写缓存的操作
+            List<User> users = userDao.getUserByAutograph(UserDto.builder().autograph(autograph).build());
+            if(!CollectionUtils.isEmpty(users)) {
+                user = users.get(0);
+                setUserCache(autograph, user);
+            }
+        }
+        return user;
     }
 
     private String genUserCacheKey(String autograph) {
         return autograph;
     }
     private void setUserCache(String key, User user) {
-        user.setPassword(null);
-        user.setPhoneNumber(null);
-        user.setEmail(null);
         cacheUtilService.setValue(key, JsonUtil.toJsonString(user));
+        cacheUtilService.setExpire(key, CacheConstant.USER_INFO_EXPIRE_TIME);
     }
 }

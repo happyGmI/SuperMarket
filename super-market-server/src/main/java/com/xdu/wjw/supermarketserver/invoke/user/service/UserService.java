@@ -2,6 +2,8 @@ package com.xdu.wjw.supermarketserver.invoke.user.service;
 
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertReq;
 import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertResp;
+import com.xdu.wjw.supermarketserver.invoke.user.model.UserQueryReq;
+import com.xdu.wjw.supermarketserver.invoke.user.model.UserQueryResp;
 
 /**
  * @Class: UserServiceImpl
@@ -18,4 +20,7 @@ public interface UserService {
      */
     UserInsertResp register(UserInsertReq userInsertReq) throws Exception;
 
+    UserQueryResp login(UserQueryReq userQueryReq) throws Exception;
+
+    UserQueryResp queryUserInfo(UserQueryReq userQueryReq);
 }

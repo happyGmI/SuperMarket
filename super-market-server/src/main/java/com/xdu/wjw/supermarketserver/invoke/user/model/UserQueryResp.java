@@ -15,6 +15,10 @@ import java.util.Date;
 @Builder
 public class UserQueryResp {
     /**
+     * 使用手机号/邮箱用户签名
+     */
+    private String autograph;
+    /**
      * 用户类型
      */
     private Byte type;

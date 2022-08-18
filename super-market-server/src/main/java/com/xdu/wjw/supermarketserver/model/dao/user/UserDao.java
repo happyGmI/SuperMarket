@@ -5,7 +5,6 @@ import com.xdu.wjw.supermarketmodel.enums.user.UserTypeEnum;
 import com.xdu.wjw.supermarketmodel.model.entity.User;
 import com.xdu.wjw.supermarketmodel.model.entity.UserExample;
 import com.xdu.wjw.supermarketmodel.model.mapper.UserMapper;
-import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertReq;
 import com.xdu.wjw.supermarketserver.model.dto.user.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -47,6 +46,11 @@ public class UserDao {
     public List<User> getUserByEmail(UserDto userDto) {
         UserExample example = new UserExample();
         example.createCriteria().andEmailEqualTo(userDto.getEmail()).andStatusEqualTo(UserStatusEnum.ONLINE.getCode());
+        return userMapper.selectByExample(example);
+    }
+    public List<User> getUserByAutograph(UserDto userDto) {
+        UserExample example = new UserExample();
+        example.createCriteria().andAutographEqualTo(userDto.getAutograph()).andStatusEqualTo(UserStatusEnum.ONLINE.getCode());
         return userMapper.selectByExample(example);
     }
 }
