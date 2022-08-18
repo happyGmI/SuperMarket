@@ -1,5 +1,6 @@
 package com.xdu.wjw.supermarketserver.invoke.user.service.impl;
 
+import com.xdu.wjw.supermarketmodel.contants.CacheConstant;
 import com.xdu.wjw.supermarketmodel.contants.PatternConstant;
 import com.xdu.wjw.supermarketmodel.enums.user.UserLoginTypeEnum;
 import com.xdu.wjw.supermarketmodel.enums.user.UserVerificationTypeEnum;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @Class: UserServiceImpl
@@ -34,6 +36,27 @@ public class UserServiceImpl implements UserService {
     UserDao userDao;
     @Autowired
     CacheUtilService cacheUtilService;
+
+    public boolean sendVerificationCode(String phoneOrEmail) throws Exception {
+        String randomCode = String.valueOf(Math.abs(ThreadLocalRandom.current().nextInt()) % 900000 + 100000);
+        Long expertSeconds = cacheUtilService.getExpertSeconds(phoneOrEmail);
+        if (CacheConstant.USER_VERIFICATION_CODE_EXPIRE_TIME - expertSeconds > 4 * 60) {
+            throw new Exception("请不要重复发送验证码！");
+        }
+        if (PatternUtil.match(phoneOrEmail, PatternConstant.EMAIL_CHECK_PATTERN)) {
+            if (!cacheUtilService.setIfAbsent(phoneOrEmail, randomCode)) {
+                randomCode = String.valueOf(cacheUtilService.getValue(phoneOrEmail));
+            }
+            cacheUtilService.setExpire(phoneOrEmail, CacheConstant.USER_VERIFICATION_CODE_EXPIRE_TIME);
+            return EmailUtil.sendEmail(phoneOrEmail, randomCode);
+        } else if (PatternUtil.match(phoneOrEmail, PatternConstant.PHONE_CHECK_PATTERN)) {
+            // TODO: 发送短信
+            return true;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public UserInsertResp register(UserInsertReq userInsertReq) throws Exception {
@@ -92,13 +115,12 @@ public class UserServiceImpl implements UserService {
         // 生成token
         String token = JwtTokenUtil.getToken(user.getAutograph());
         // 返回结果
-        // TODO: 邮箱和电话号码脱敏处理
         return UserQueryResp.builder()
                 .birthday(user.getBirthday())
                 .type(user.getType())
                 .nickname(user.getNickname())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
+                .email(SensitiveFieldUtil.email(user.getEmail()))
+                .phoneNumber(SensitiveFieldUtil.telephone(String.valueOf(user.getPhoneNumber())))
                 .portrait(user.getPortrait())
                 .token(token)
                 .build();
@@ -148,7 +170,6 @@ public class UserServiceImpl implements UserService {
                 throw new Exception("查询结果为空！");
             }
         }
-
         return user;
     }
     private void validRegisterReq(UserInsertReq userInsertReq) {
@@ -161,10 +182,10 @@ public class UserServiceImpl implements UserService {
         if (StringUtils.isEmpty(email) && StringUtils.isEmpty(phone)) {
             throw new IllegalArgumentException();
         }
-        if (!(StringUtils.isNotEmpty(email) && PatternUtil.match(PatternConstant.EMAIL_CHECK_PATTERN, email))) {
+        if ((StringUtils.isNotEmpty(email) && ! PatternUtil.match(PatternConstant.EMAIL_CHECK_PATTERN, email))) {
             throw new IllegalArgumentException();
         }
-        if (!(StringUtils.isNotEmpty(phone) && PatternUtil.match(PatternConstant.EMAIL_CHECK_PATTERN, phone))) {
+        if ((StringUtils.isNotEmpty(phone) && ! PatternUtil.match(PatternConstant.PHONE_CHECK_PATTERN, phone))) {
             throw new IllegalArgumentException();
         }
         if (StringUtils.isEmpty(userInsertReq.getVerificationCode())) {

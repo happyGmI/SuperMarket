@@ -26,8 +26,8 @@ public enum UserStatusEnum {
         this.type = type;
     }
 
-    public static String getUserTypeByCode(int code) {
-        return userStatusEnumMap.get(code).type;
+    public static UserStatusEnum getUserTypeByCode(int code) {
+        return userStatusEnumMap.get(code);
     }
 
     public Byte getCode() {

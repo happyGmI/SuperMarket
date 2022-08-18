@@ -33,6 +33,9 @@ public class CacheUtilService {
         }
         return Boolean.TRUE.equals(redisTemplate.expire(key, expireSeconds, TimeUnit.SECONDS));
     }
+    public boolean setExpire(String key, Integer expireSeconds) {
+        return Boolean.TRUE.equals(redisTemplate.expire(key, expireSeconds, TimeUnit.SECONDS));
+    }
     public boolean compareAndDeleteKey(String key, Object exceptValue) {
         Object value = redisTemplate.opsForValue().get(key);
         if (exceptValue.equals(value)) {

@@ -18,11 +18,11 @@ public class LogUtil {
         return LoggerFactory.getLogger(SCHEDULE_TASK);
     }
 
-    public static Logger getCommonLogger(String name) {
-        return LoggerFactory.getLogger(name);
+    public static Logger getCommonLogger(Class<?> clazz) {
+        return LoggerFactory.getLogger(clazz);
     }
 
-    public static Logger getRedisLogger(Class redisClassType) {
+    public static Logger getRedisLogger(Class<?> redisClassType) {
         return LoggerFactory.getLogger(redisClassType);
     }
 

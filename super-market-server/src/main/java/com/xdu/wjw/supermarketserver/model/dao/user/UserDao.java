@@ -1,6 +1,7 @@
 package com.xdu.wjw.supermarketserver.model.dao.user;
 
 import com.xdu.wjw.supermarketmodel.enums.user.UserStatusEnum;
+import com.xdu.wjw.supermarketmodel.enums.user.UserTypeEnum;
 import com.xdu.wjw.supermarketmodel.model.entity.User;
 import com.xdu.wjw.supermarketmodel.model.entity.UserExample;
 import com.xdu.wjw.supermarketmodel.model.mapper.UserMapper;
@@ -9,6 +10,7 @@ import com.xdu.wjw.supermarketserver.model.dto.user.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +27,16 @@ public class UserDao {
 
     public void insertUser(UserDto dto) {
         User user = new User();
+        user.setAutograph(dto.getAutograph());
+        user.setType(UserTypeEnum.REGULAR.getCode());
+        user.setPassword(dto.getPassword());
+        user.setNickname("user");
+        user.setPortrait("https://img2.woyaogexing.com/2022/08/02/626ba5f21cb8634d!400x400.jpg");
+        user.setStatus(UserStatusEnum.ONLINE.getCode());
+        user.setEmail(dto.getEmail());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setAddTime(new Date());
+        user.setUpdateTime(new Date());
         userMapper.insert(user);
     }
     public List<User> getUserByPhone(UserDto userDto) {

@@ -4,7 +4,13 @@ import com.xdu.wjw.supermarketmodel.model.entity.User;
 import com.xdu.wjw.supermarketmodel.model.mapper.UserMapper;
 import com.xdu.wjw.supermarketserver.factory.MetaObjectFactory;
 import com.xdu.wjw.supermarketserver.invoke.lock.DistributeLockService;
+import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertReq;
+import com.xdu.wjw.supermarketserver.invoke.user.service.UserService;
+import com.xdu.wjw.supermarketserver.model.dao.user.UserDao;
+import com.xdu.wjw.supermarketserver.model.dto.user.UserDto;
 import com.xdu.wjw.supermarketserver.util.CacheUtilService;
+import com.xdu.wjw.supermarketserver.util.EncryptUtil;
+import com.xdu.wjw.supermarketserver.util.JsonUtil;
 import org.apache.ibatis.reflection.MetaObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +29,29 @@ class SuperMarketServerApplicationTests {
     @Autowired(required = false)
     UserMapper userMapper;
     @Autowired
+    UserDao userDao;
+    @Autowired
     CacheUtilService cacheUtilService;
     @Autowired
     DistributeLockService distributeLockService;
+    @Autowired
+    UserService userService;
     @Test
-    void contextLoads() {
-        userMapper.selectByPrimaryKey(1L);
+    void contextLoads() throws Exception {
+//        userDao.insertUser(
+//                UserDto
+//                .builder().email("1930955585@qq.com")
+//                        .phoneNumber(13174530720L)
+//                        .autograph(EncryptUtil.Base64Encode("1930955585@qq.com"))
+//                        .password(EncryptUtil.Base64Encode("123456"))
+//                        .build()
+//        );
+//        System.out.println(JsonUtil.toJsonString(userMapper.selectByPrimaryKey(1L)));
+        cacheUtilService.setValue(String.valueOf(19829701506L), String.valueOf(123456));
+        System.out.println(cacheUtilService.getValue(String.valueOf(19829701506L)));
+        System.out.println(userService.register(
+                UserInsertReq.builder().phoneNumber(19829701506L).password("123456a").verificationCode("123456").build()
+        ));
     }
     @Test
     public void testCache() {
