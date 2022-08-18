@@ -24,5 +24,12 @@ class SuperMarketServerApplicationTests {
         cacheUtilService.deleteKey("hello");
         System.out.println(cacheUtilService.getValue("hello"));
     }
+    @Test
+    public void testLock() {
+        cacheUtilService.setValue("hello", "world");
+        System.out.println(cacheUtilService.getValue("hello"));
+        cacheUtilService.deleteKey("hello");
+        System.out.println(cacheUtilService.getValue("hello"));
+    }
 
 }

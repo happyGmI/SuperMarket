@@ -96,13 +96,12 @@ public class UserServiceImpl implements UserService {
         // 生成token
         String token = JwtTokenUtil.getToken(user.getAutograph());
         // 返回结果
-        // TODO: 邮箱和电话号码脱敏处理
         return UserQueryResp.builder()
                 .birthday(user.getBirthday())
                 .type(user.getType())
                 .nickname(user.getNickname())
-                .email(user.getEmail())
-                .phoneNumber(user.getPhoneNumber())
+                .email(SensitiveFieldUtil.email(user.getEmail()))
+                .phoneNumber(SensitiveFieldUtil.telephone(String.valueOf(user.getPhoneNumber())))
                 .portrait(user.getPortrait())
                 .token(token)
                 .build();
@@ -140,7 +139,7 @@ public class UserServiceImpl implements UserService {
                     .build()
             );
             if (user.size() == 0) {
-                throw new Exception("查询结果为空！");
+                throw new Exception("用户不存在！");
             }
         }
         if (StringUtils.isNotEmpty(email)) {
@@ -149,7 +148,7 @@ public class UserServiceImpl implements UserService {
                         .email(email)
                         .build());
             if (user.size() == 0) {
-                throw new Exception("查询结果为空！");
+                throw new Exception("用户不存在！");
             }
         }
 
@@ -227,7 +226,8 @@ public class UserServiceImpl implements UserService {
     private User getUserFromCache(String autograph) {
         return JsonUtil.jsonStringToObject(
                 String.valueOf(cacheUtilService.getValue(genUserCacheKey(autograph))),
-                User.class);
+                User.class
+        );
     }
 
     private String genUserCacheKey(String autograph) {

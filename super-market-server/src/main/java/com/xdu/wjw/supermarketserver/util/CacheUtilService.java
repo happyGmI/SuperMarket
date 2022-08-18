@@ -29,6 +29,12 @@ public class CacheUtilService {
         redisTemplate.opsForValue().set(key, value);
         redisTemplate.expire(key, CACHE_EXPIRE_TIME, TimeUnit.SECONDS);
     }
+    public boolean setIfAbsent(String lockId, Integer randomId) {
+        return Boolean.TRUE.equals(redisTemplate.opsForValue().setIfAbsent(lockId, randomId));
+    }
+    public boolean setExpire(String lockId, Integer lockSeconds) {
+        return Boolean.TRUE.equals(redisTemplate.expire(lockId, lockSeconds, TimeUnit.SECONDS));
+    }
 
     public Object getValue(String key) {
         return redisTemplate.opsForValue().get(key);
