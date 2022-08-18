@@ -41,6 +41,10 @@ public class UserServiceImpl implements UserService {
         String autograph = "";
         String phoneNumber = userInsertReq.getPhoneNumber() != null ? String.valueOf(userInsertReq.getPhoneNumber()) : "";
         String email = userInsertReq.getEmail();
+        List<User> isRegisterUser = getUserFromDB(phoneNumber, email);
+        if (!CollectionUtils.isEmpty(isRegisterUser)) {
+            throw new Exception("当前用户已经注册过了!请直接登录！");
+        }
         if (StringUtils.isNotEmpty(verificationCodeAndEncode(userInsertReq, phoneNumber))) {
             autograph = verificationCodeAndEncode(userInsertReq, phoneNumber);
         }
@@ -230,9 +234,6 @@ public class UserServiceImpl implements UserService {
         return autograph;
     }
     private void setUserCache(String key, User user) {
-        user.setPassword(null);
-        user.setPhoneNumber(null);
-        user.setEmail(null);
         cacheUtilService.setValue(key, JsonUtil.toJsonString(user));
     }
 }
