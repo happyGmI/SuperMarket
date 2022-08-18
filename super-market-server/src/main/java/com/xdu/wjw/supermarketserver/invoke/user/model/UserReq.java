@@ -2,6 +2,7 @@ package com.xdu.wjw.supermarketserver.invoke.user.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * @Class: UserReq
@@ -11,6 +12,7 @@ import lombok.Data;
  */
 @Data
 @Builder
+@ToString
 public class UserReq {
 
     /**
