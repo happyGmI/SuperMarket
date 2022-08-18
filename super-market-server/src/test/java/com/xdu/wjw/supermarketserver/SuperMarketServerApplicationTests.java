@@ -55,11 +55,6 @@ class SuperMarketServerApplicationTests {
     }
 
     public static void main(String[] args) {
-        MetaObjectFactory factory = new MetaObjectFactory();
-        Class userClass = User.class;
-        MetaObject metaObject = factory.buildFlowMetaObject(User.class);
-        Object object = metaObject.getOriginalObject();
-        System.out.println(object.toString());
-        System.out.println(metaObject.getObjectWrapper());
+
     }
 }
