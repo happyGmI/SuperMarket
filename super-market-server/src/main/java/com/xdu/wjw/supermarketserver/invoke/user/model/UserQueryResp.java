@@ -37,7 +37,7 @@ public class UserQueryResp {
     /**
      * 脱敏处理后的电话号码
      */
-    private Long phoneNumber;
+    private String phoneNumber;
     /**
      * token
      */

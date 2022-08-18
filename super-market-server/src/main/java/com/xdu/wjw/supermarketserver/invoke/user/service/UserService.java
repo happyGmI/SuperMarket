@@ -10,10 +10,11 @@ import com.xdu.wjw.supermarketserver.invoke.user.model.UserInsertResp;
  * @Description:
  */
 public interface UserService {
-
     /**
-     * 用户注册
-     * @param userInsertReq 用户注册请求表单
+     * 用户注册接口
+     * @param userInsertReq
+     * @return
+     * @throws Exception
      */
     UserInsertResp register(UserInsertReq userInsertReq) throws Exception;
 

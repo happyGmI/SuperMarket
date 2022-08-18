@@ -3,10 +3,14 @@ package com.xdu.wjw.supermarketmodel.enums.user;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author weijunwei
+ */
+
 public enum UserTypeEnum {
 
-    MERCHANT(1, "regular_users"),
-    CUSTOMER(2, "member_users");
+    REGULAR(1, "regular_users"),
+    MEMBER(2, "member_users");
 
     private static final Map<Integer, UserTypeEnum> userTypeEnumMap;
 

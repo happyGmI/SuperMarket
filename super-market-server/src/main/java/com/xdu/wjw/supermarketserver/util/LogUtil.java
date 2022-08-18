@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 public class LogUtil {
 
     private static final String SCHEDULE_TASK = "schedule_task";
+    private static final String REDIS = "redis";
 
     public static Logger getScheduleTaskLogger() {
         return LoggerFactory.getLogger(SCHEDULE_TASK);
@@ -19,6 +20,10 @@ public class LogUtil {
 
     public static Logger getCommonLogger(String name) {
         return LoggerFactory.getLogger(name);
+    }
+
+    public static Logger getRedisLogger(Class redisClassType) {
+        return LoggerFactory.getLogger(redisClassType);
     }
 
 }

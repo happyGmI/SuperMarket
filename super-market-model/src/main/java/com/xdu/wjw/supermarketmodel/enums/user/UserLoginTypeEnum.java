@@ -12,9 +12,7 @@ import java.util.Map;
 public enum UserLoginTypeEnum {
 
     PHONE(1, "VerificationCode"),
-    EMAIL(2, "email"),
-    VERIFICATION_CODE(3, "verification_code"),
-    PASSWORD(4, "password");
+    EMAIL(2, "email");
 
 
     private static final Map<Integer, UserLoginTypeEnum> userLoginTypeEnum;

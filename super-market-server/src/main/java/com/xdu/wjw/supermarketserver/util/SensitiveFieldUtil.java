@@ -1,10 +1,11 @@
 package com.xdu.wjw.supermarketserver.util;
 
 import lombok.experimental.UtilityClass;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+/**
+ * @author weijunwei
+ */
 @UtilityClass
-@Slf4j
 public class SensitiveFieldUtil {
 
     /**
@@ -100,27 +101,4 @@ public class SensitiveFieldUtil {
         }
         return StringUtils.rightPad(StringUtils.left(code, 2), StringUtils.length(code), "*");
     }
-
-    public static void main(String[] args) {
-        // 测试姓名
-        String name = SensitiveFieldUtil.chineseName("张三丰");
-        log.info("name = {}", name);
-
-        // 测试身份证号
-        String idCard = SensitiveFieldUtil.idCard("123456781234567812");
-        log.info("idCard = {}", idCard);
-
-        // 测试手机号
-        String telephone = SensitiveFieldUtil.telephone("17320002000");
-        log.info("telephone = {}", telephone);
-
-        // 测试地址
-        String address = SensitiveFieldUtil.address("天津市滨海新区经济开发区第三大街", 9);
-        log.info("address = {}", address);
-
-        // 测试邮箱
-        String email = SensitiveFieldUtil.email("apengcxjt@163.com");
-        log.info("email = {}", email);
-    }
-
 }

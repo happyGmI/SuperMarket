@@ -9,16 +9,14 @@ import java.util.Map;
  * @Description:
  */
 public class ContextUtil {
-
-    private static ThreadLocal<Map<String, Object>> userContext = new ThreadLocal<>();
-
-    public static void put() {
-
+    private static ThreadLocal<Object> context = new ThreadLocal<>();
+    public static void put(String key, Object value) {
+        context.set(value);
     }
-    public static void get() {
-
+    public static Object get() {
+        return context.get();
     }
     public static void clean() {
-        userContext.remove();
+        context.remove();
     }
 }

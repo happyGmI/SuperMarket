@@ -10,8 +10,8 @@ import java.util.Map;
  * @Description:
  */
 public enum UserVerificationTypeEnum {
-    VERIFICATION_CODE(3, "verification_code"),
-    PASSWORD(4, "password");
+    VERIFICATION_CODE(1, "verification_code"),
+    PASSWORD(2, "password");
     private static final Map<Integer, UserVerificationTypeEnum> userVerificationTypeEnum;
 
     static {
